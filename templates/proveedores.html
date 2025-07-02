@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Proveedores - Taller Mecánico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .card-proveedor {
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            color: #333;
+            font-size: 18px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        .icon-container {
+            text-align: right;
+            margin-top: 10px;
+        }
+        .btn-agregar {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-agregar .icon-plus {
+            font-weight: bold;
+            font-size: 20px;
+            line-height: 1;
+        }
+        nav .nav-link.active {
+            font-weight: bold;
+            color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Encabezado -->
+<div class="container mt-4 mb-2">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h2>Taller Mecánico XYZ</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <img src="{% static 'img/logo.jpg' %}" alt="Logo" class="logo-img" />
+        </div>
+    </div>
+</div>
+
+<!-- Navegación -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+    <div class="container">
+        <div class="navbar-nav">
+            <a class="nav-link" href="{% url 'home' %}">HOME</a>
+            <a class="nav-link" href="{% url 'nosotros' %}">NOSOTROS</a>
+            <a class="nav-link" href="{% url 'productos' %}">PRODUCTOS</a>
+            <a class="nav-link" href="{% url 'trabajadores_list' %}">TRABAJADORES</a>
+            <a class="nav-link active" href="{% url 'proveedores' %}">PROVEEDORES</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Título y botón -->
+<div class="container mb-4 d-flex justify-content-between align-items-center">
+    <h4 class="text-primary">NUESTROS PROVEEDORES</h4>
+    <a href="{% url 'agregar_proveedor' %}" class="btn btn-success btn-agregar">
+        <span class="icon-plus">+</span> AGREGAR PROVEEDOR
+    </a>
+</div>
+
+<!-- Lista de proveedores -->
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for proveedor in proveedores %}
+            <div class="col d-flex">
+                <div class="card-proveedor flex-fill">
+                    <p><strong>Nombre:</strong> {{ proveedor.nombre }}</p>
+                    <p><strong>Correo:</strong> {{ proveedor.correo }}</p>
+                    <p><strong>Teléfono:</strong> {{ proveedor.telefono }}</p>
+                    <p><strong>País:</strong> {{ proveedor.pais }}</p>
+
+                    <div class="icon-container">
+                        <a href="{% url 'editar_proveedor' proveedor.id %}" class="icon-btn" title="Editar">✏️</a>
+
+                        <form action="{% url 'eliminar_proveedor' proveedor.id %}" method="POST" style="display:inline;" onsubmit="return confirm('¿Deseas eliminar este proveedor?');">
+                            {% csrf_token %}
+                            <button type="submit" class="icon-btn" title="Eliminar">🗑️</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center text-danger">No hay proveedores registrados aún.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

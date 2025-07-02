@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Trabajadores - Taller Mecánico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .trabajador-img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .card-trabajador {
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            color: #333;
+            font-size: 18px;
+            margin-left: 5px;
+        }
+        .icon-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Encabezado -->
+<div class="container mt-4 mb-2">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h2>Taller Mecánico XYZ</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <img src="{% static 'img/logo.jpg' %}" alt="Logo" class="logo-img">
+        </div>
+    </div>
+</div>
+
+<!-- Navegación -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <div class="navbar-nav">
+            <a class="nav-link" href="/">HOME</a>
+            <a class="nav-link" href="/nosotros/">NOSOTROS</a>
+            <a class="nav-link" href="/productos/">PRODUCTOS</a>
+            <a class="nav-link active" href="#">TRABAJADORES</a>
+            <a class="nav-link" href="/proveedores/">PROVEEDORES</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Sección de Título + Botón -->
+<div class="container mb-4">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h4 class="text-primary">NUESTRO PERSONAL</h4>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{% url 'agregar_trabajador' %}" class="btn btn-success">
+            <strong>+ AGREGAR TRABAJADOR</strong>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Lista de Trabajadores -->
+<div class="container">
+    <div class="row">
+        {% for trabajador in trabajadores %}
+            <div class="col-md-6">
+                <div class="card-trabajador d-flex">
+                    {% if trabajador.imagen %}
+                        <img src="{{ trabajador.imagen.url }}" alt="Foto" class="trabajador-img me-3">
+                    {% else %}
+                        <img src="{% static 'img/default-user.png' %}" alt="Sin foto" class="trabajador-img me-3">
+                    {% endif %}
+                    <div>
+                        <h5 class="mb-1">{{ trabajador.nombre }}</h5>
+                        <p class="mb-0"><strong>Correo:</strong> {{ trabajador.correo }}</p>
+                        <p class="mb-0"><strong>Código:</strong> {{ trabajador.codigo_empleado }}</p>
+                        <p class="mb-0"><strong>Cargo:</strong> {{ trabajador.cargo }}</p>
+                        <p class="mb-0"><strong>Teléfono:</strong> {{ trabajador.telefono }}</p>
+                    </div>
+                    <div class="icon-container">
+                        <a href="{% url 'editar_trabajador' trabajador.id %}" class="icon-btn" title="Editar">
+                            ✏️
+                        </a>
+                        <a href="{% url 'eliminar_trabajador' trabajador.id %}" class="icon-btn" title="Eliminar">
+                            🗑️
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center text-danger">No hay trabajadores registrados aún.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

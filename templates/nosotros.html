@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nosotros - Taller Mecánico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .empresa-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Encabezado -->
+<div class="container mt-4 mb-2">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h2>Taller Mecánico XYZ</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <img src="{% static 'img/logo.jpg' %}" alt="Logo" class="logo-img">
+        </div>
+    </div>
+</div>
+
+<!-- Navegación -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <div class="navbar-nav">
+            <a class="nav-link" href="{% url 'home' %}">HOME</a>
+            <a class="nav-link" href="{% url 'nosotros' %}">NOSOTROS</a>
+            <a class="nav-link" href="{% url 'productos' %}">PRODUCTOS</a>
+            <a class="nav-link" href="{% url 'trabajadores_list' %}">TRABAJADORES</a>  <!-- Aquí -->
+            <a class="nav-link" href="{% url 'proveedores' %}">PROVEEDORES</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Contenido Principal -->
+<div class="container">
+    {% if empresa and not request.GET.edit %}
+        <!-- Mostrar datos existentes -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <p><strong>NOMBRE DE LA EMPRESA:</strong> {{ empresa.nombre }}</p>
+                <p><strong>RUC:</strong> {{ empresa.ruc }}</p>
+                <p><strong>DIRECCIÓN:</strong> {{ empresa.direccion }}</p>
+            </div>
+            <div class="col-md-6 text-end">
+                <a href="?edit=1" class="btn btn-warning">EDITAR INFORMACIÓN</a>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-md-6 text-center">
+                {% if empresa.imagen %}
+                    <img src="{{ empresa.imagen.url }}" alt="Imagen empresa" class="empresa-img mb-3">
+                {% else %}
+                    <img src="{% static 'img/logo.jpg' %}" alt="Imagen predeterminada" class="empresa-img mb-3">
+                {% endif %}
+                <p><strong>Año de Fundación:</strong> {{ empresa.anio_fundacion }}</p>
+            </div>
+            <div class="col-md-6">
+                <h5>MISIÓN</h5>
+                <p>{{ empresa.mision }}</p>
+                <h5>VISIÓN</h5>
+                <p>{{ empresa.vision }}</p>
+            </div>
+        </div>
+
+    {% else %}
+        <!-- Formulario para agregar o editar -->
+        {% if not empresa %}
+            <h4 class="text-danger mb-4 text-center">NO SE HA INGRESADO INFORMACIÓN DE LA EMPRESA!!</h4>
+        {% else %}
+            <h4 class="text-primary mb-4 text-center">EDITAR INFORMACIÓN DE LA EMPRESA</h4>
+        {% endif %}
+
+        <form method="post" class="border p-4 rounded bg-light mb-5">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Nombre:</label>
+                <input type="text" name="nombre" class="form-control" value="{{ empresa.nombre|default:'' }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">RUC:</label>
+                <input type="text" name="ruc" class="form-control" value="{{ empresa.ruc|default:'' }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Dirección:</label>
+                <input type="text" name="direccion" class="form-control" value="{{ empresa.direccion|default:'' }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Misión:</label>
+                <textarea name="mision" class="form-control" required>{{ empresa.mision|default:'' }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Visión:</label>
+                <textarea name="vision" class="form-control" required>{{ empresa.vision|default:'' }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Año de Fundación:</label>
+                <input type="number" name="anio_fundacion" class="form-control" value="{{ empresa.anio_fundacion|default:'' }}" required>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success">Guardar Información</button>
+            </div>
+        </form>
+    {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
